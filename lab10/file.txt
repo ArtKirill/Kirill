@@ -1,0 +1,50 @@
+#include <time.h>
+#include <stdio.h>
+#define N 5
+ 
+void summa()
+{
+    int sum;
+    sum = 0;
+    for(int i = 0; i < N; i++)
+    { 
+        for (int j = 0; j < N; j++)
+        { 
+            if ( matr[i][j] > 0 )
+            sum+= matr[i][j];
+        }
+        printf("\n\nСумма положительных: %i", sum);
+    }
+}
+void kolotr()
+{
+    int otr;
+    otr = 0;
+    for( int i = 0; i < N; i++)
+    { 
+	for(int j = 0; j < N; j++)
+        {
+	    if ( matr[i][j] < 0 )
+            otr++;
+        }
+        printf("\n\nколичество отрицательных: %i\n", otr);
+    }
+}
+void main ()
+{
+    setlocale (0,"Rus");
+    int i, j;
+    int matr[N][N];
+    printf("Матрица А:\n\n");
+    for(i = 0; i < N; i++)
+    { 
+	for (j = 0; j < N; j++)
+        { 
+	    matr[i][j] = rand()%100-50;
+            printf(" %3i", matr[i][j]);
+        }
+        printf("\n\n");
+    }
+    summa(); 
+    kolotr();  
+}
