@@ -2,6 +2,26 @@
 #include <stdio.h>
 #define N 5
  
+
+
+void main ()
+{
+    setlocale (0,"Rus");
+    int i, j;
+    int matr[N][N];
+    printf("РњР°С‚СЂРёС†Р° Рђ:\n\n");
+    for(i = 0; i < N; i++)
+    { 
+	for (j = 0; j < N; j++)
+        { 
+	    matr[i][j] = rand()%100-50;
+            printf(" %3i", matr[i][j]);
+        }
+        printf("\n\n");
+    }
+    summa(); 
+    kolotr();  
+}
 void summa()
 {
     int sum;
@@ -13,7 +33,7 @@ void summa()
             if ( matr[i][j] > 0 )
             sum+= matr[i][j];
         }
-        printf("\n\nСумма положительных: %i", sum);
+        printf("\n\nРЎСѓРјРјР° РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹С…: %i", sum);
     }
 }
 void kolotr()
@@ -27,24 +47,6 @@ void kolotr()
 	    if ( matr[i][j] < 0 )
             otr++;
         }
-        printf("\n\nколичество отрицательных: %i\n", otr);
+        printf("\n\nРєРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹С…: %i\n", otr);
     }
-}
-void main ()
-{
-    setlocale (0,"Rus");
-    int i, j;
-    int matr[N][N];
-    printf("Матрица А:\n\n");
-    for(i = 0; i < N; i++)
-    { 
-	for (j = 0; j < N; j++)
-        { 
-	    matr[i][j] = rand()%100-50;
-            printf(" %3i", matr[i][j]);
-        }
-        printf("\n\n");
-    }
-    summa(); 
-    kolotr();  
 }
