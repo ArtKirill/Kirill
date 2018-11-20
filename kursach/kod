@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <locale.h>
 #pragma warning(disable : 4996)
-typedef struct {
+typedef struct 
+{
 	int raz;
 	char adr[100];
 	int dom;
@@ -12,75 +14,91 @@ typedef struct {
 	char kom[100];
 }KV;
 
-void out(FILE *f, KV *mp, int size) {
+void out(FILE *f, KV *mp, int size) 
+{
 	fwrite(&size, sizeof(int), 1, f);
 	fwrite(mp, sizeof(KV), size, f);
 }
 
-void in(FILE *f, KV *mp, int *size) {
+void in(FILE *f, KV *mp, int *size) 
+{
 	fread(size, sizeof(int), 1, f);
 	fread(mp, sizeof(KV), *size, f);
 }
 
 KV kva() {
 	KV mp;
-	printf("\nFlat space: ");
+	printf("\nПлощадь(м^2): ");
 	scanf("%d", &mp.raz);
-	printf("\nAdress: ");
+	printf("\nУлица: ");
 	scanf("%s", &mp.adr);
-	printf("\nDom: ");
+	printf("\nДом: ");
 	scanf("%d", &mp.dom);
-	printf("\nItag: ");
+	printf("\nЭтаж: ");
 	scanf("%d", &mp.itag);
-	printf("\nKvartira: ");
+	printf("\nКвартира: ");
 	scanf("%d", &mp.kvart);
-	printf("\nCena: ");
+	printf("\nЦена(руб): ");
 	scanf("%d", &mp.cen);
-	printf("\nComment: ");
+	printf("\nКомментарий: ");
 	scanf("%s", &mp.kom);
 	return mp;
 }
 
-void show(KV *mp, int size) {
+void show(KV *mp, int size) 
+{
 	int i;
-	for (i = 0; i< size; i++) {
-		printf("\nFlat space(m^2): %d \nAdress: %s \nDom: %d \nItag: %d \nKvartira: %d \nPrice: %d \nInfo: %s \n", mp[i].raz, mp[i].adr, mp[i].dom, mp[i].itag, mp[i].kvart, mp[i].cen, mp[i].kom);
+	for (i = 0; i< size; i++) 
+	{
+		printf("\nПлощадь(m^2): %d \nАдрес: \nУлица:%s \nДом: %d \nЭтаж: %d \nКвартира: %d \nЦена: %d \nКомментарий: %s \n", mp[i].raz, mp[i].adr, mp[i].dom, mp[i].itag, mp[i].kvart, mp[i].cen, mp[i].kom);
 	}
 }
 
-void find(KV *mp, int size) {
+void find(KV *mp, int size)
+{
 	char adr[100];
 	int cen, raz;
-	printf("\nFlat space:");
+	printf("\nПлощадь:");
 	scanf("%d", &raz);
-	printf("\n price:");
+	printf("\nЦена(руб):");
 	scanf("%d", &cen);
-	printf("\nadress:");
+	printf("\nАдрес:");
 	scanf("%s", &adr);
 	for (int i = 0; i< size; i++)
 		if (mp[i].raz == raz || cen == mp[i].cen || strcmp(mp[i].adr, adr) == 0)
-			printf("\n povashemyzaprosynaideno: \nFlat space(m^2): %d \nAdress: %s \nDom: %d \nItag: %d \nKvartira: %d \nPrice: %d \nInfo: %s \n", mp[i].raz, mp[i].adr, mp[i].dom, mp[i].itag, mp[i].kvart, mp[i].cen, mp[i].kom);
+			printf("\nПо вашему запросу найдено: \nПлощадь(m^2): %d \nАдрес: \nУлица: %s \nДом: %d \nЭтаж: %d \nКвартира: %d \nЦена: %d \nКомментарий: %s \n", mp[i].raz, mp[i].adr, mp[i].dom, mp[i].itag, mp[i].kvart, mp[i].cen, mp[i].kom);
 }
 
-int adr(const void *f, const void *s) {
+int adr(const void *f, const void *s) 
+{
 	return strcmp(((KV*)f)->adr, ((KV*)s)->adr) > 0;
 }
 
-int cen(const void *f, const void *s) {
+int cen(const void *f, const void *s) 
+{
 	return (((KV*)f)->cen - ((KV*)s)->cen<0);
 }
 
-int main() {
+int main() 
+{
+	setlocale(LC_ALL, "");
 	KV mp[100];
 	int size = 0, i;
-	FILE *f = fopen("f.txt", "rb");
-	if (f) {
+	FILE *f = fopen("file.txt", "rb");
+	if (f) 
+	{
 		in(f, mp, &size);
 		fclose(f);
 	}
-	f = fopen("f.txt", "wb");
+	f = fopen("file.txt", "wb");
 	while (1) {
-		printf("\n1 add\n2 edit\n3 delete\n4 sort by adress\n5 sort by price\n6 show all\n7 find\n0 exit\n");
+		printf("Введите:\n|1| - если хотите добавить квартиру\n");
+			printf("|2| - если хотите удалить квартиру\n");
+			printf("|3| - если хотите сортировать по адресу\n");
+			printf("|4| - если хотите сортировать по цене\n");
+			printf("|5| - если хотите отобразить весь список\n");
+			printf("|6| - если хотите открыть поиск\n");
+			printf("|0| - если хотите выйти\n>");
 		scanf("%d", &i);
 		switch (i) {
 		case 1:
@@ -88,29 +106,24 @@ int main() {
 			size++;
 			break;
 		case 2:
-			printf("\ni: ");
-			scanf("%d", &i);
-			mp[i] = kva();
-			break;
-		case 3:
-			printf("\ni: ");
+			printf("\nУкажите номер квартиры(начиная с нуля) по списку: ");
 			scanf("%d", &i);
 			--size;
 			for (; i< size; i++)
 				mp[i] = mp[i + 1];
 			break;
-		case 4:
+		case 3:
 			qsort(mp, size, sizeof(KV), adr);
 			show(mp, size);
 			break;
-		case 5:
+		case 4:
 			qsort(mp, size, sizeof(KV), cen);
 			show(mp, size);
 			break;
-		case 6:
+		case 5:
 			show(mp, size);
 			break;
-		case 7:
+		case 6:
 			find(mp, size);
 			break;
 		case 0:
