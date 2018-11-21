@@ -1,0 +1,159 @@
+#include <stdio.h>
+#include <conio.h>
+#include <malloc.h>
+#include <string.h>
+#include <locale.h>
+#include <windows.h>
+#pragma warning(disable : 4996)
+#define N 250
+#define M 20
+
+int n = 0;
+int l = 0;
+int o = 0;
+
+
+
+
+void func_poiska_func(char **x, char **y)
+{
+	int i, j, k;
+	char buff[N];
+	for (i = 0; i < n; i++)
+	{
+		if (((strstr(x[i], "void") != NULL) ||
+			(strstr(x[i], "int") != NULL) ||
+			(strstr(x[i], "char") != NULL) ||
+			(strstr(x[i], "float") != NULL) ||
+			(strstr(x[i], "double") != NULL)) &&
+			(strstr(x[i], "(") != NULL) &&
+			(strstr(x[i], "=") == NULL) &&
+			(strstr(x[i], "printf") == NULL) &&
+			(strstr(x[i], "scanf") == NULL))
+		{
+			j = 1 + strcspn(x[i], " ");
+			strcpy(buff, x[i] + j);
+			k = strcspn(buff, "(");
+			strncpy(y[l], buff, k);
+			l++;
+		}
+	}
+}
+
+void func_poiska_dr(char **x, char **y, char **z)
+{
+	int i = 0, j = 0, v = 0, k = 0;
+	char buff[M];
+	memset(buff, '\0', M);
+	for (i = 0; i < n; i++)
+	{
+		if (strstr(x[i], "FILE") != NULL)
+		{
+			if (strstr(x[i], "fopen") != NULL)
+			{
+				j = 1 + strcspn(x[i], "\"");
+				strcpy(buff, x[i] + j);
+				k = strcspn(buff, ".");
+				strncpy(z[o], buff, k);
+				o++;
+				memset(buff, '\0', M);
+				buff[0] = '|';
+				strcpy(z[o], buff);
+				o++;
+			}
+		}
+	}
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < l; j++)
+		{
+			if (strstr(x[i], y[j]) != NULL)
+			{
+				if ((strstr(x[i], "void") != NULL) ||
+					(strstr(x[i], "int") != NULL) ||
+					(strstr(x[i], "char") != NULL) ||
+					(strstr(x[i], "float") != NULL) ||
+					(strstr(x[i], "double") != NULL))
+				{
+					if ((strstr(y[j], "main") != NULL))
+					{
+						strcpy(z[o], "*-");
+						strcat(z[o], y[j]);
+						o++;
+						break;
+					}
+					strcpy(z[o], "|-");
+					strcat(z[o], y[j]);
+					o++;
+					break;
+				}
+				else
+				{
+
+					if ((strstr(z[o - 1], "main") == NULL) && (v == 0))
+					{
+						strcpy(z[o], "| *--");
+						strcat(z[o], y[j]);
+						o++;
+						v = 0;
+						break;
+					}
+					else
+					{
+						strcpy(z[o], "  *--");
+						strcat(z[o], y[j]);
+						o++;
+						v = 1;
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+int main()
+{
+	HANDLE hConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsoleHandle, 0 | 15);
+	setlocale(LC_ALL, "rus");
+	int i, j = 0;
+	char **tree; //для дерева функций
+	char **kod; //для строк кода
+	char **func; //для функций
+	char buff[N];
+	FILE *f = fopen("file1.txt", "r");
+	while (!feof(f))
+	{
+		fgets(buff, N, f);
+		n++;
+	}
+	fclose(f);
+	kod = (char**)calloc(n, sizeof(char*));
+	for (i = 0; i<n; ++i)
+		kod[i] = (char*)calloc(N, sizeof(char));
+	func = (char**)calloc(n, sizeof(char*));
+	for (i = 0; i<n; i++)
+		func[i] = (char*)calloc(M, sizeof(char));
+	tree = (char**)calloc(n, sizeof(char*));
+	for (i = 0; i<n; i++)
+		tree[i] = (char*)calloc(M, sizeof(char));
+	fopen("file1.txt", "r");
+	while (!feof(f))
+	{
+		fgets(kod[j], N, f);
+		j++;
+	}
+	fclose(f);
+	func_poiska_func(kod, func);
+	func_poiska_dr(kod, func, tree);
+	printf("Дерево вызовов функций:\n");
+	for (i = 0; i < o; i++)
+	{
+		SetConsoleTextAttribute(hConsoleHandle, 2 | 9);
+		printf("%s\n", tree[i]);
+	}
+	SetConsoleTextAttribute(hConsoleHandle, 0 | 15);
+	_getch();
+	return 0;
+}
