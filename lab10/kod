@@ -39,9 +39,12 @@ void func(int begin, int finish, char *fstr, char *name_mas, int name_counter, i
         {
             for(int i=start; i<end; i++, j++)
             {
-                rez[j]=fstr[i];
-		if (((rez[j] == 'w') && (rez[j+1] == 'h')) || ((rez[j] == 'f') && (rez[j+1] == 'o')))
+	    	if ((fstr[i] == 'w') && (fstr[i + 1] == 'h'))
+				{
 					break;
+				}
+                rez[j]=fstr[i];
+		
             }
             rez[j-1]='\n';
         }
