@@ -91,19 +91,38 @@ int main()
 		fclose(f);
 	}
 	f = fopen("file.txt", "wb");
-	while (1) {
-		printf("Введите:\n|1| - если хотите добавить квартиру\n");
+	char flag_wasNextLine = 0;
+	while (1) 
+	{
+		if (!flag_wasNextLine)
+		{
+			printf("Введите:\n|1| - если хотите добавить квартиру\n");
 			printf("|2| - если хотите удалить квартиру\n");
 			printf("|3| - если хотите сортировать по адресу\n");
 			printf("|4| - если хотите сортировать по цене\n");
 			printf("|5| - если хотите отобразить весь список\n");
 			printf("|6| - если хотите открыть поиск\n");
 			printf("|0| - если хотите выйти\n>");
-		scanf("%d", &i);
-		switch (i) {
+		}
+		char tmpc, prevc = 0;
+		i = 0;
+		while ((tmpc = getchar()) != '\n')
+		{
+			i++;
+			prevc = prevc * 10 + tmpc;
+		}
+		if (i == 0)
+			flag_wasNextLine = 1;
+		else
+			flag_wasNextLine = 0;
+
+		i = prevc - '0';
+		switch (i) 
+		{
 		case 1:
 			mp[size] = kva();
 			size++;
+			printf("\n");
 			break;
 		case 2:
 			printf("\nУкажите номер квартиры(начиная с нуля) по списку: ");
@@ -111,26 +130,34 @@ int main()
 			--size;
 			for (; i< size; i++)
 				mp[i] = mp[i + 1];
+			printf("\n");
 			break;
 		case 3:
 			qsort(mp, size, sizeof(KV), adr);
 			show(mp, size);
+			printf("\n");
 			break;
 		case 4:
 			qsort(mp, size, sizeof(KV), cen);
 			show(mp, size);
+			printf("\n");
 			break;
 		case 5:
 			show(mp, size);
+			printf("\n");
 			break;
 		case 6:
 			find(mp, size);
+			printf("\n");
 			break;
 		case 0:
 			out(f, mp, size);
 			fclose(f);
 			return 0;
+		default:
+		{
+			break;
+		}
 		}
 	}
 }
-
