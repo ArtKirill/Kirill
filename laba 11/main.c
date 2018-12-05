@@ -38,8 +38,8 @@ int main()
 			if (flagp == 1)
 			{
 				SetConsoleTextAttribute(hStdout, 12);
-				int z = i;
-				for (; z < strlen(line) && flagp == 1; z++, i++)
+				
+				for (z = i; z < strlen(line) && flagp == 1; z++, i++)
         {
 					if (line[z] == '*' && line[z + 1] == '/') 
           {
